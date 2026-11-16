@@ -1,0 +1,73 @@
+.tl { list-style: none; margin-top: 60px; position: relative; }
+.tl::before { content: ""; position: absolute; left: 19px; top: 8px; bottom: 8px; border-left: 3px dashed var(--ink); opacity: .35; }
+
+.stop { position: relative; padding-left: 64px; margin-bottom: 70px; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 40px; align-items: start; }
+.stop-text { min-width: 0; }
+.stop:last-child { margin-bottom: 0; }
+.dot {
+  position: absolute; left: 4px; top: 10px; width: 34px; height: 34px; border-radius: 50%; background: var(--green);
+  border: 3px solid var(--ink); display: grid; place-items: center; color: #fff; font-size: 15px; font-weight: 800;
+}
+.stop.pending .dot { background: var(--orange); color: var(--ink); animation: pulse-o 1.6s infinite; }
+@keyframes pulse-o { 0% { box-shadow: 0 0 0 0 rgba(255, 154, 31, .7); } 100% { box-shadow: 0 0 0 20px rgba(255, 154, 31, 0); } }
+
+.stop-meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 12.5px; color: var(--ink-2); margin-bottom: 12px; }
+.chip { background: var(--ink); color: #fff; padding: 4px 10px; border-radius: 999px; font-weight: 600; letter-spacing: .06em; }
+.stop.pending .chip { background: var(--orange); color: var(--ink); }
+.stop h3 { font-size: clamp(26px, 3.4vw, 36px); font-weight: 800; margin-bottom: 12px; }
+.stop p { font-size: 17px; color: var(--ink-2); margin-bottom: 10px; }
+.stop p b { color: var(--ink); }
+.stop p.note { font-family: 'Caveat', cursive; line-height: 1.2; margin-top: 6px; }
+
+/* photos beside each stop */
+.media { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+.media .polaroid { width: min(250px, 44%); }
+.media .polaroid.land { width: min(380px, 90%); }
+.media.duo { position: relative; display: block; min-height: 470px; width: 100%; max-width: 470px; justify-self: center; }
+.media.duo .polaroid.land { position: absolute; top: 0; left: 0; width: 78%; }
+.media.duo .polaroid:not(.land) { position: absolute; right: 0; bottom: 0; width: 46%; z-index: 2; }
+
+/* GoComet gallery spans the full stop width */
+.gallery { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 10px; }
+.stop .gallery-title { grid-column: 1 / -1; font-size: 32px; color: var(--orange-d); margin-bottom: -4px; }
+.gallery .polaroid figcaption { font-size: 19px; }
+
+.yt {
+  display: flex; align-items: center; gap: 14px; background: var(--paper); border: 2px solid var(--ink); border-radius: 14px;
+  padding: 14px 18px; text-decoration: none; box-shadow: 4px 4px 0 var(--ink); margin-top: 14px; width: fit-content; max-width: 100%; transition: transform .15s;
+}
+.yt b { overflow-wrap: anywhere; }
+.yt .play { flex: none; }
+.yt:hover { transform: translate(-2px, -2px); }
+.yt .play { width: 42px; height: 30px; background: var(--red); border-radius: 8px; display: grid; place-items: center; color: #fff; font-size: 13px; }
+.yt small { display: block; color: var(--ink-2); font-size: 13px; }
+.eta {
+  display: inline-block; margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 14px;
+  background: var(--ink); color: var(--orange); padding: 10px 14px; border-radius: 8px; max-width: 100%;
+}
+
+@media (max-width: 820px) {
+  .stop { grid-template-columns: minmax(0, 1fr); gap: 26px; padding-left: 52px; }
+  .tl::before { left: 15px; }
+  .dot { left: 0; width: 32px; height: 32px; }
+  .gallery { grid-template-columns: 1fr 1fr; gap: 22px; }
+  .media.duo { min-height: min(470px, 110vw); }
+}
+@media (max-width: 560px) {
+  .tl { margin-top: 40px; }
+  .stop { padding-left: 42px; margin-bottom: 56px; }
+  .tl::before { left: 12px; }
+  .dot { width: 28px; height: 28px; font-size: 13px; border-width: 2.5px; }
+  .stop p { font-size: 16px; }
+  .gallery .polaroid figcaption { font-size: 16px; }
+  .stop .gallery-title { font-size: 28px; }
+  /* LPU + parents photos: stack with a small overlap instead of absolute positioning */
+  .media.duo { display: flex; flex-direction: column; min-height: 0; max-width: 360px; }
+  .media.duo .polaroid.land { position: relative; width: 92%; }
+  .media.duo .polaroid:not(.land) { position: relative; width: 64%; align-self: flex-end; margin-top: -14px; }
+}
+@media (max-width: 360px) {
+  .gallery { grid-template-columns: minmax(0, 1fr); max-width: 260px; }
+  .media .polaroid { width: min(250px, 80%); }
+  .eta { font-size: 12.5px; }
+}

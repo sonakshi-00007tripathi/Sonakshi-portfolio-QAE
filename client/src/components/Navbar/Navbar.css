@@ -1,0 +1,13 @@
+.navbar { position: relative; z-index: 50; background: var(--paper); border-bottom: 1.5px solid var(--line); }
+.nav-in { display: flex; align-items: center; justify-content: space-between; height: 62px; gap: 16px; }
+.logo { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 15px; text-decoration: none; padding: 10px 0; white-space: nowrap; }
+.logo b { color: var(--orange-d); }
+.nav-links { display: flex; gap: 14px; font-weight: 500; font-size: 15px; }
+.nav-links a { text-decoration: none; opacity: .8; padding: 10px 6px; }
+.nav-links a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+.nav-cta { padding: 9px 16px; font-size: 14px; box-shadow: 3px 3px 0 var(--orange); }
+
+@media (max-width: 820px) { .nav-links { display: none; } }
+@media (max-width: 960px) { .nav-links { gap: 4px; font-size: 14px; } }
+@media (max-width: 560px) { .nav-cta { padding: 9px 14px; font-size: 13px; } }
+@media (max-width: 360px) { .logo { font-size: 13px; } .nav-cta { padding: 8px 12px; } }

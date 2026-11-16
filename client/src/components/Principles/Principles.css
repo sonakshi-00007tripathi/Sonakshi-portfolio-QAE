@@ -1,0 +1,24 @@
+.receipts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); gap: 18px; margin-top: 50px; }
+.receipt {
+  background: #fff; padding: 22px 20px 30px; position: relative; font-size: 15px; box-shadow: var(--sh); transition: transform .25s, opacity .8s;
+  /* zig-zag torn bottom edge */
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50%/16px 100%;
+          mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50%/16px 100%;
+}
+.receipt.reveal.in:hover { transform: translateY(-6px) rotate(-.6deg); }
+.receipt .rno {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; gap: 8px;
+  border-bottom: 1.5px dashed #ccc; padding-bottom: 10px; margin-bottom: 12px;
+}
+.receipt h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+.receipt p { color: var(--ink-2); line-height: 1.5; }
+.receipt .proof {
+  margin-top: 14px; padding-top: 10px; border-top: 1.5px dashed #ccc; font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; display: flex; justify-content: space-between; gap: 8px;
+}
+.receipt .proof b { color: var(--green); }
+.receipt.special { background: var(--orange); }
+.receipt.special p, .receipt.special .rno { color: var(--ink); }
+.foot-note { margin-top: 30px; font-family: 'Caveat', cursive; font-size: 26px; color: var(--orange-d); }
+@media (hover: none) { .receipt.reveal.in:hover { transform: none; } }
+@media (max-width: 560px) { .receipts { gap: 14px; margin-top: 36px; } .foot-note { font-size: 22px; } }

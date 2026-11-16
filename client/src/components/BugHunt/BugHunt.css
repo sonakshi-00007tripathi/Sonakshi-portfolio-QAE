@@ -1,0 +1,105 @@
+/* ---------- Bug Hunt: interactive checkout with planted defects ---------- */
+#bughunt { padding-top: 90px; }
+
+.hunt { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; margin-top: 40px; align-items: start; }
+.hunt > * { min-width: 0; }
+
+/* shared reset for the clickable bits */
+.hunt button.spot, .hunt button.plain {
+  font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer;
+}
+
+/* the fake store */
+.shop { background: #fff; border: 2.5px solid var(--ink); border-radius: 18px; box-shadow: 8px 8px 0 var(--ink); overflow: hidden; }
+.shop-bar {
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px; font-size: 11.5px; color: #9AA6BA;
+  background: var(--navy); letter-spacing: .04em;
+}
+.shop-bar .env { background: var(--orange); color: var(--ink); font-weight: 700; padding: 2px 8px; border-radius: 6px; }
+
+.shop-item { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 18px; padding: 22px 20px 16px; }
+.item-info { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.item-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; line-height: 1.2; }
+.seller { font-size: 13px; color: var(--muted); }
+.stars { color: #E8A317; font-size: 15px; letter-spacing: 1px; }
+.stars span { color: var(--ink-2); font-size: 13px; letter-spacing: 0; }
+.qty { font-size: 13px; border: 1.5px solid var(--line) !important; border-radius: 8px; padding: 4px 10px !important; background: var(--paper) !important; }
+.arrive { font-size: 15px; color: var(--green); }
+.arrive b { color: var(--ink); }
+
+.img-spot {
+  aspect-ratio: 1; width: 100%; display: grid !important; place-items: center; align-content: center; gap: 4px;
+  background: repeating-linear-gradient(45deg, #f4efe4, #f4efe4 8px, #ece4d3 8px, #ece4d3 16px) !important;
+  border: 1.5px dashed var(--line) !important; border-radius: 12px;
+}
+.broken { font-size: 30px; filter: grayscale(1); opacity: .55; }
+.img-spot small { font-size: 11px; color: var(--muted); }
+
+.summary { border-top: 1.5px dashed var(--line); margin: 0 20px; padding: 14px 0 20px; display: flex; flex-direction: column; gap: 2px; }
+.summary .row, .summary .row-spot { display: flex !important; justify-content: space-between; gap: 10px; width: 100%; font-size: 15px; padding: 5px 8px !important; }
+.summary .row-spot.stack { flex-direction: column; gap: 0; padding: 0 !important; }
+.summary .row-spot.stack .row { padding: 5px 8px; }
+.summary .total { font-weight: 800; font-size: 17px; color: var(--red); border-top: 1.5px solid var(--line) !important; margin-top: 6px; padding-top: 10px !important; word-break: break-all; }
+.free { color: var(--green); font-weight: 700; }
+.neg { color: var(--green); }
+.place {
+  margin-top: 14px; width: 100%; padding: 13px; border-radius: 999px; border: 2px solid var(--ink); background: #FFD814;
+  font-weight: 700; font-size: 15px; cursor: pointer;
+}
+
+/* hoverable "is this a bug?" affordance */
+.spot { position: relative; border-radius: 8px; outline: 2px dashed transparent; outline-offset: 2px; transition: outline-color .15s, background .15s; }
+.spot.txt-spot { padding: 2px 4px !important; margin-left: -4px !important; }
+@media (hover: hover) {
+  .spot:hover, .hunt .plain:hover { outline: 2px dashed var(--orange); outline-offset: 2px; background: rgba(255, 154, 31, .08) !important; }
+}
+.spot:focus-visible, .hunt .plain:focus-visible, .place:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+.spot.found { outline: 2.5px solid var(--red); background: rgba(217, 70, 59, .07) !important; }
+.pin {
+  position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--red); color: #fff; font: 700 12px/22px 'JetBrains Mono', monospace; text-align: center;
+  box-shadow: 0 2px 0 var(--ink); animation: pop .35s cubic-bezier(.2, 1.6, .4, 1);
+}
+@keyframes pop { from { transform: scale(0); } }
+
+/* the tracker panel */
+.tracker { background: var(--navy); color: #EEF1F6; border: 2.5px solid var(--ink); border-radius: 18px; padding: 20px; box-shadow: 8px 8px 0 var(--orange); }
+.tracker-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.tracker-head p { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); font-weight: 600; }
+.tracker .score { color: #EEF1F6; letter-spacing: .04em; }
+.tracker .score b { font-size: 22px; color: #4ADE80; }
+.meter { height: 10px; border-radius: 999px; background: rgba(255, 255, 255, .12); margin: 12px 0 8px; overflow: hidden; }
+.meter i { display: block; height: 100%; background: linear-gradient(90deg, var(--orange), #4ADE80); border-radius: 999px; transition: width .5s cubic-bezier(.2, .8, .2, 1); }
+.alarms { font-size: 11.5px; color: #9AA6BA; }
+.alarms span { color: var(--orange); }
+.toast { min-height: 24px; margin: 8px 0 6px; font-size: 14px; color: #FDE68A; }
+.empty { font-size: 24px; color: #B8C2D3; padding: 18px 0; }
+
+.tickets { list-style: none; display: flex; flex-direction: column; gap: 10px; max-height: 430px; overflow-y: auto; padding-right: 4px; }
+.ticket { background: var(--paper); color: var(--ink); border-radius: 12px; padding: 12px 14px; border-left: 5px solid var(--red); animation: slide .35s ease; }
+@keyframes slide { from { opacity: 0; transform: translateY(-8px); } }
+.t-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 11px; color: var(--muted); font-weight: 600; }
+.sev { padding: 1px 8px; border-radius: 999px; color: #fff; }
+.sev-critical { background: var(--red); }
+.sev-high { background: var(--orange-d); }
+.sev-medium { background: #B7791F; }
+.sev-low { background: #6B7689; }
+.ticket h3 { font-size: 17px; margin: 6px 0 4px; }
+.ticket p { font-size: 13.5px; color: var(--ink-2); line-height: 1.45; }
+.ticket p b { color: var(--ink); }
+
+.win { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: rgba(74, 222, 128, .14); color: #BBF7D0; font-weight: 600; }
+.tracker-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.btn.sm { padding: 9px 16px; font-size: 14px; box-shadow: 3px 3px 0 var(--orange); }
+
+@media (max-width: 900px) { .hunt { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) {
+  .shop-item { grid-template-columns: 84px minmax(0, 1fr); gap: 12px; padding: 18px 14px 12px; }
+  .summary { margin: 0 14px; }
+  .item-title { font-size: 17px; }
+  .shop-bar { font-size: 10.5px; padding: 9px 12px; }
+}
+
+/* the address bar hides bug #1 (card number in the URL) */
+.shop-bar .url-spot { min-width: 0; overflow-wrap: anywhere; color: #C9D4E5; padding: 2px 6px !important; }
+.shop-bar .url-spot.found { background: rgba(217, 70, 59, .25) !important; }

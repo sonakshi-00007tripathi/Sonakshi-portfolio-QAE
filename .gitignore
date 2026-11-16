@@ -1,0 +1,22 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+build/
+
+# environment files: never commit secrets
+.env
+.env.*
+!.env.example
+
+# logs & OS / editor noise
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# deploy tooling
+.vercel/
